@@ -135,89 +135,89 @@ function ChatWindow() {
     );
 
   return (
-    <section className="w-full h-full flex flex-col gap-4">
-    <div className="flex-grow flex flex-col bg-gray-100">
-      {/* Top Bar */}
-      <div className="bg-gray-800 text-white py-2 px-4 flex items-center gap-2 shadow-sm">
+    <section className="w-[70%] h-full flex flex-col gap-4 items-center justify-center">
+      <div className="h-full w-full bg-chat-bg flex flex-col">
+        {/* Top Bar */}
+        <div className="bg-background py-2 px-4 flex items-center gap-2 shadow-sm">
+          <img
+            src={secondUser?.profile_pic || "/default-user.png"}
+            alt="profile picture"
+            className="w-9 h-9 rounded-full object-cover"
+          />
+          <div>
+            <h3>{secondUser?.name}</h3>
+            {secondUser?.lastSeen && (
+              <p className="text-xs text-neutral-400">
+                Last seen at {secondUser?.lastSeen}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex-grow flex flex-col gap-12 p-6 overflow-y-scroll">
+          {/* Chat Messages */}
+          {msgList?.map((m, index) => (
+  <div
+    key={index}
+    data-sender={m.sender === userData.id}
+    className={`bg-white w-fit rounded-md p-2 shadow-sm max-w-[400px] break-words data-[sender=true]:ml-auto data-[sender=true]:bg-primary-light`}
+  >
+    {m.fileUrl ? (
+      m.fileType && m.fileType.startsWith("image/") ? (
         <img
-          src={secondUser?.profile_pic || "/default-user.png"}
-          alt="profile picture"
-          className="w-9 h-9 md:w-12 md:h-12 rounded-full object-cover"
+          src={m.fileUrl}
+          alt={m.fileName}
+          className="w-full max-h-[300px] object-contain"
         />
-        <div>
-          <h3 className="text-sm md:text-base">{secondUser?.name}</h3>
-          {secondUser?.lastSeen && (
-            <p className="text-xs md:text-sm text-gray-300">
-              Last seen at {secondUser?.lastSeen}
-            </p>
-          )}
+      ) : m.fileType && m.fileType.startsWith("video/") ? (
+        <video
+          src={m.fileUrl}
+          controls
+          className="w-full max-h-[300px] object-contain"
+        />
+      ) : (
+        <a
+          href={m.fileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline"
+        >
+          {m.fileName || "Download File"}
+        </a>
+      )
+    ) : (
+      <p>{m.text}</p>
+    )}
+    <p className="text-xs text-neutral-500 text-end">{m.time}</p>
+  </div>
+))}
+
+        </div>
+        <div className="bg-background py-3 px-6 shadow flex items-center gap-6">
+          <label htmlFor="file-upload" className="cursor-pointer">
+            <PlusIcon />
+          </label>
+          <input
+            type="file"
+            id="file-upload"
+            style={{ display: "none" }}
+            onChange={handleFileUpload}
+            accept="image/*,video/*,.pdf"
+          />
+          <input
+            value={msg}
+            onChange={(e) => setMsg(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") sendMsg();
+            }}
+            className="w-full py-2 px-4 rounded focus:outline-none"
+            placeholder="Type a message..."
+          />
+          <button onClick={sendMsg}>
+            <SendIcon />
+          </button>
         </div>
       </div>
-  
-      {/* Messages */}
-      <div className="flex-grow flex flex-col gap-4 p-4 overflow-y-auto">
-        {msgList?.map((m, index) => (
-          <div
-            key={index}
-            className={`p-2 rounded-md shadow-sm max-w-sm break-words ${
-              m.sender === userData.id
-                ? "bg-blue-200 ml-auto"
-                : "bg-white"
-            }`}
-          >
-            {m.fileUrl ? (
-              m.fileType?.startsWith("image/") ? (
-                <img
-                  src={m.fileUrl}
-                  alt={m.fileName}
-                  className="w-full max-h-60 object-contain"
-                />
-              ) : (
-                <a
-                  href={m.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  {m.fileName || "Download File"}
-                </a>
-              )
-            ) : (
-              <p className="text-sm md:text-base">{m.text}</p>
-            )}
-            <p className="text-xs md:text-sm text-gray-500 mt-1">{m.time}</p>
-          </div>
-        ))}
-      </div>
-  
-      {/* Input Bar */}
-      <div className="bg-gray-200 py-3 px-4 flex items-center gap-4">
-        <label htmlFor="file-upload" className="cursor-pointer">
-          <PlusIcon className="w-6 h-6 md:w-8 md:h-8" />
-        </label>
-        <input
-          type="file"
-          id="file-upload"
-          style={{ display: "none" }}
-          onChange={handleFileUpload}
-          accept="image/*,video/*,.pdf"
-        />
-        <input
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") sendMsg();
-          }}
-          className="flex-grow py-2 px-4 rounded focus:outline-none border text-sm md:text-base"
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMsg}>
-          <SendIcon className="w-6 h-6 md:w-8 md:h-8" />
-        </button>
-      </div>
-    </div>
-  </section>
-  
+    </section>
   );
 }
 
