@@ -134,91 +134,91 @@ function ChatWindow() {
       </section>
     );
 
-  return (
-    <section className="w-full h-full flex flex-col gap-4">
-    <div className="flex-grow flex flex-col bg-gray-100">
-      {/* Top Bar */}
-      <div className="bg-gray-800 text-white py-2 px-4 flex items-center gap-2 shadow-sm">
-        <img
-          src={secondUser?.profile_pic || "/default-user.png"}
-          alt="profile picture"
-          className="w-9 h-9 md:w-12 md:h-12 rounded-full object-cover"
-        />
-        <div>
-          <h3 className="text-sm md:text-base">{secondUser?.name}</h3>
-          {secondUser?.lastSeen && (
-            <p className="text-xs md:text-sm text-gray-300">
-              Last seen at {secondUser?.lastSeen}
-            </p>
-          )}
-        </div>
-      </div>
-  
-      {/* Messages */}
-      <div className="flex-grow flex flex-col gap-4 p-4 overflow-y-auto">
-        {msgList?.map((m, index) => (
-          <div
-            key={index}
-            className={`p-2 rounded-md shadow-sm max-w-sm break-words ${
-              m.sender === userData.id
-                ? "bg-blue-200 ml-auto"
-                : "bg-white"
-            }`}
-          >
-            {m.fileUrl ? (
-              m.fileType?.startsWith("image/") ? (
-                <img
-                  src={m.fileUrl}
-                  alt={m.fileName}
-                  className="w-full max-h-60 object-contain"
-                />
-              ) : (
-                <a
-                  href={m.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  {m.fileName || "Download File"}
-                </a>
-              )
-            ) : (
-              <p className="text-sm md:text-base">{m.text}</p>
-            )}
-            <p className="text-xs md:text-sm text-gray-500 mt-1">{m.time}</p>
+    return (
+      <section className="w-full h-full flex flex-col gap-4">
+        <div className="flex-grow flex flex-col bg-gray-100">
+          {/* Top Bar */}
+          <div className="bg-gray-800 text-white py-2 px-4 flex items-center gap-2 shadow-sm">
+            <img
+              src={secondUser?.profile_pic || "/default-user.png"}
+              alt="profile picture"
+              className="w-9 h-9 md:w-12 md:h-12 rounded-full object-cover"
+            />
+            <div>
+              <h3 className="text-sm md:text-base">{secondUser?.name}</h3>
+              {secondUser?.lastSeen && (
+                <p className="text-xs md:text-sm text-gray-300">
+                  Last seen at {secondUser?.lastSeen}
+                </p>
+              )}
+            </div>
           </div>
-        ))}
-      </div>
-  
-      {/* Input Bar */}
-      <div className="bg-gray-200 py-3 px-4 flex items-center gap-4">
-        <label htmlFor="file-upload" className="cursor-pointer">
-          <PlusIcon className="w-6 h-6 md:w-8 md:h-8" />
-        </label>
-        <input
-          type="file"
-          id="file-upload"
-          style={{ display: "none" }}
-          onChange={handleFileUpload}
-          accept="image/*,video/*,.pdf"
-        />
-        <input
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") sendMsg();
-          }}
-          className="flex-grow py-2 px-4 rounded focus:outline-none border text-sm md:text-base"
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMsg}>
-          <SendIcon className="w-6 h-6 md:w-8 md:h-8" />
-        </button>
-      </div>
-    </div>
-  </section>
-  
-  );
+    
+          {/* Messages */}
+          <div className="flex-grow flex flex-col gap-4 p-4 overflow-y-auto h-[calc(100vh-160px)]">
+            {msgList?.map((m, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded-md shadow-sm max-w-sm break-words ${
+                  m.sender === userData.id
+                    ? "bg-blue-200 ml-auto"
+                    : "bg-white"
+                }`}
+              >
+                {m.fileUrl ? (
+                  m.fileType?.startsWith("image/") ? (
+                    <img
+                      src={m.fileUrl}
+                      alt={m.fileName}
+                      className="w-full max-h-60 object-contain"
+                    />
+                  ) : (
+                    <a
+                      href={m.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {m.fileName || "Download File"}
+                    </a>
+                  )
+                ) : (
+                  <p className="text-sm md:text-base">{m.text}</p>
+                )}
+                <p className="text-xs md:text-sm text-gray-500 mt-1">{m.time}</p>
+              </div>
+            ))}
+          </div>
+    
+          {/* Input Bar */}
+          <div className="bg-gray-200 py-3 px-4 flex items-center gap-4 sticky bottom-0">
+            <label htmlFor="file-upload" className="cursor-pointer">
+              <PlusIcon className="w-6 h-6 md:w-8 md:h-8" />
+            </label>
+            <input
+              type="file"
+              id="file-upload"
+              style={{ display: "none" }}
+              onChange={handleFileUpload}
+              accept="image/*,video/*,.pdf"
+            />
+            <input
+              value={msg}
+              onChange={(e) => setMsg(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") sendMsg();
+              }}
+              className="flex-grow py-2 px-4 rounded focus:outline-none border text-sm md:text-base"
+              placeholder="Type a message..."
+            />
+            <button onClick={sendMsg}>
+              <SendIcon className="w-6 h-6 md:w-8 md:h-8" />
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+    
 }
 
 export default ChatWindow;
