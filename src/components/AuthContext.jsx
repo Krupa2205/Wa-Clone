@@ -80,36 +80,37 @@ function AuthWrapper({ children }) {
     const updatePhoto = async (img) => {
         const storageRef = ref(storage, `profile/${userData.id}`);
         const uploadTask = uploadBytesResumable(storageRef, img);
-
+    
         uploadTask.on(
             "state_changed",
             () => {
-                // on State Changed
+                // Upload started
                 setIsUploading(true);
                 setError(null);
-                console.log("upload started");
+                console.log("Upload started");
             },
-            () => {
-                // on Error
-                setError("Unable to Upload!");
-                alert("Unable to Upload!");
+            (error) => {
+                // Upload error
+                setError("Unable to upload!");
+                alert("Unable to upload!");
+                setIsUploading(false);
             },
-            () => {
-                // on Success
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    await updateDoc(doc(db, "users", userData.id), {
-                        profile_pic: downloadURL,
-                    });
-                    setUserData({
-                        ...userData,
-                        profile_pic: downloadURL,
-                    });
-                    setIsUploading(false);
-                    setError(null);
+            async () => {
+                // Upload success
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                await updateDoc(doc(db, "users", userData.id), {
+                    profile_pic: downloadURL,
                 });
+                setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    profile_pic: downloadURL,
+                }));
+                setIsUploading(false);
+                setError(null);
             }
         );
     };
+    
 
     const logout = () => {
         signOut(auth);
